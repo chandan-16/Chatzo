@@ -1,0 +1,11 @@
+@import "tailwindcss";
+
+@theme {
+  --color-my-blue: #0A32B3;
+  --color-my-pink: #BD265D;
+
+  --breakpoint-sm: 480px;
+  --breakpoint-md: 768px;
+  --breakpoint-lg: 1200px;
+  --breakpoint-xl: 1440px;
+}
