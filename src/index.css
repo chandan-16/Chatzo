@@ -9,3 +9,7 @@
   --breakpoint-lg: 1200px;
   --breakpoint-xl: 1440px;
 }
+
+@theme {
+  --background-image-hero: url("https://i.pinimg.com/736x/8c/98/99/8c98994518b575bfd8c949e91d20548b.jpg");
+}

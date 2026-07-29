@@ -1,3 +1,4 @@
+import Button from "./Button"
 import { Input } from "./Input"
 
 export const Login = () => {
@@ -9,6 +10,9 @@ export const Login = () => {
                 <Input name="name" type="email" />
                 <Input name="password" type="password"/>
                 <Input name="confirm-password" type="password"/>
+                <Button text="Login"/>
+                <Button text="Register" secondary />
+
             </div>
         </div>    
     </>
