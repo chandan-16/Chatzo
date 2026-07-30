@@ -1,20 +1,66 @@
-import Button from "./Button"
-import { Input } from "./Input"
+import { useState } from "react";
+import Button from "./Button";
+import { Input } from "./Input";
 
 export const Login = () => {
+  const [login, setLogin] = useState<boolean>(true);
+  const [email, setEmail] = useState<string>("");
+  const [password, setPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+
+  const handleSignUp = () => {
+    const data = { email, password, confirmPassword };
+  };
+
+  const handleSignIn = () => {
+    const data = { email, password };
+  };
+
   return (
     <>
-        <div className="w-full md:w-[450px]">
-            <h1 className='text-white text-center font-bold text-4xl md:text-6xl mb-10'>Login</h1>
-            <div className="bg-white flex flex-col w-full gap-3 p-6 min-h-[150px] rounder-xl rounded-xl drop-shadow-xl">
-                <Input name="name" type="email" />
-                <Input name="password" type="password"/>
-                <Input name="confirm-password" type="password"/>
-                <Button text="Login"/>
-                <Button text="Register" secondary />
+      <div className="w-full md:w-[450px]">
+        <h1 className="text-white text-center font-bold text-4xl md:text-6xl mb-10">
+          {login ? "Login" : "Register"}
+        </h1>
+        <div className="bg-white flex flex-col w-full gap-3 p-6 min-h-[150px] rounder-xl rounded-xl drop-shadow-xl">
+          <Input
+            name="name"
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+          />
+          <Input
+            name="password"
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+          />
+          {!login && (
+            <Input
+              name="confirm-password"
+              type="password"
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+            />
+          )}
 
-            </div>
-        </div>    
+          {login ? (
+            <>
+              <Button text="Login" />
+              <Button
+                onClick={() => setLogin(false)}
+                text="Register"
+                secondary
+              />
+            </>
+          ) : (
+            <>
+              <Button text="Register" />
+              <Button onClick={() => setLogin(true)} text="Login" secondary />
+            </>
+          )}
+        </div>
+      </div>
     </>
-  )
-}
+  );
+};
