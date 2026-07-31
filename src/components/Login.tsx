@@ -10,10 +10,12 @@ export const Login = () => {
 
   const handleSignUp = () => {
     const data = { email, password, confirmPassword };
+    console.log(data);
   };
 
   const handleSignIn = () => {
     const data = { email, password };
+    console.log(data);
   };
 
   return (
@@ -46,7 +48,7 @@ export const Login = () => {
 
           {login ? (
             <>
-              <Button text="Login" />
+              <Button onClick={handleSignUp} text="Login" />
               <Button
                 onClick={() => setLogin(false)}
                 text="Register"
@@ -55,7 +57,7 @@ export const Login = () => {
             </>
           ) : (
             <>
-              <Button text="Register" />
+              <Button onClick={handleSignIn} text="Register" />
               <Button onClick={() => setLogin(true)} text="Login" secondary />
             </>
           )}
