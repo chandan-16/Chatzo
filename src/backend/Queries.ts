@@ -1,6 +1,8 @@
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "./Firebase";
-
+import { toastError } from "../utils/toast";
+import { CatchErr } from "../utils/catchErr";
+ 
 export const BE_signUp = (data : {email: string, password: string, confirmPassword: string}) =>
      {
         const {email, password, confirmPassword} = data;
@@ -8,11 +10,14 @@ export const BE_signUp = (data : {email: string, password: string, confirmPasswo
         if(email && password){
             if(password === confirmPassword){
                 createUserWithEmailAndPassword(auth, email, password)
-                .then(userCred => {
-                    console.log(userCred)
+                .then(({user}) => {
+                    console.log(user)
                 })
                     
-                .catch(err => console.log(err))
-            }else console.log("Password must match!")
-        } else console.log("Fileds shouldn't be left empty!");
+                .catch((err) => CatchErr(err))
+            }else toastError("Password must match!")
+        } else{
+
+            toastError ("Fields shoudn't be left empty! ");        
+        } 
      };

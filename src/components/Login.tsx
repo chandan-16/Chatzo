@@ -47,7 +47,7 @@ export const Login = () => {
             />
           )}
 
-          {login ? (
+          {/* {login ? (
             <>
               <Button onClick={handleSignUp} text="Login" />
               <Button
@@ -59,6 +59,22 @@ export const Login = () => {
           ) : (
             <>
               <Button onClick={handleSignIn} text="Register" />
+              <Button onClick={() => setLogin(true)} text="Login" secondary />
+            </>
+          )} */}
+
+          {login ? (
+            <>
+              <Button onClick={handleSignIn} text="Login" />
+              <Button
+                onClick={() => setLogin(false)}
+                text="Register"
+                secondary
+              />
+            </>
+          ) : (
+            <>
+              <Button onClick={handleSignUp} text="Register" />
               <Button onClick={() => setLogin(true)} text="Login" secondary />
             </>
           )}
