@@ -1,0 +1,7 @@
+# apiKey: "AIzaSyA0O8XZItTW9kCwwAyCV1A_X-qnFJAGLS4",
+  # authDomain: "react-typescript-chatzo-cg.firebaseapp.com",
+  # projectId: "react-typescript-chatzo-cg",
+  # storageBucket: "react-typescript-chatzo-cg.firebasestorage.app",
+  # messagingSenderId: "61433720244",
+  # appId: "1:61433720244:web:459f29c9a2f498cd7c96e1",
+  # measurementId: "G-Y73QDHFGV7"
