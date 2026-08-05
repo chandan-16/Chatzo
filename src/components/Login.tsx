@@ -1,22 +1,33 @@
 import { useState } from "react";
 import Button from "./Button";
 import { Input } from "./Input";
-import { BE_signUp } from "../backend/Queries";
+import { BE_signin, BE_signUp } from "../backend/Queries";
+import { useNavigate } from "react-router-dom";
 
 export const Login = () => {
   const [login, setLogin] = useState<boolean>(true);
   const [email, setEmail] = useState<string>("");
   const [password, setPassword] = useState<string>("");
   const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const [signUpLoading, setSignUpLoading] = useState(false);
+  const [signInLoading, setSignInLoading] = useState(false);
+
+  const goTo = useNavigate();
 
   const handleSignUp = () => {
     const data = { email, password, confirmPassword };
-    BE_signUp(data);
+    BE_signUp(data, setSignUpLoading, reset, goTo);
   };
 
   const handleSignIn = () => {
     const data = { email, password };
-    console.log(data);
+    BE_signin(data, setSignInLoading, reset, goTo);
+  };
+
+  const reset = () => {
+    setEmail("");
+    setPassword("");
+    setConfirmPassword("");
   };
 
   return (
@@ -25,6 +36,7 @@ export const Login = () => {
         <h1 className="text-white text-center font-bold text-4xl md:text-6xl mb-10">
           {login ? "Login" : "Register"}
         </h1>
+
         <div className="bg-white flex flex-col w-full gap-3 p-6 min-h-[150px] rounder-xl rounded-xl drop-shadow-xl">
           <Input
             name="name"
@@ -65,7 +77,11 @@ export const Login = () => {
 
           {login ? (
             <>
-              <Button onClick={handleSignIn} text="Login" />
+              <Button
+                onClick={handleSignIn}
+                text="Login"
+                loading={signInLoading}
+              />
               <Button
                 onClick={() => setLogin(false)}
                 text="Register"
@@ -74,7 +90,11 @@ export const Login = () => {
             </>
           ) : (
             <>
-              <Button onClick={handleSignUp} text="Register" />
+              <Button
+                onClick={handleSignUp}
+                text="Register"
+                loading={signUpLoading}
+              />
               <Button onClick={() => setLogin(true)} text="Login" secondary />
             </>
           )}
