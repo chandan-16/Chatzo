@@ -1,8 +1,11 @@
 import { useState } from "react";
 import Button from "./Button";
 import { Input } from "./Input";
-import { BE_signin, BE_signUp } from "../backend/Queries";
+import { BE_signIn, BE_signUp } from "../backend/Queries";
 import { useNavigate } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import type { AppDispatch } from "../Redux/store";
+import type { authDataType } from "../Types";
 
 export const Login = () => {
   const [login, setLogin] = useState<boolean>(true);
@@ -11,17 +14,25 @@ export const Login = () => {
   const [confirmPassword, setConfirmPassword] = useState<string>("");
   const [signUpLoading, setSignUpLoading] = useState(false);
   const [signInLoading, setSignInLoading] = useState(false);
-
   const goTo = useNavigate();
+  const dispatch = useDispatch<AppDispatch>();
 
   const handleSignUp = () => {
     const data = { email, password, confirmPassword };
-    BE_signUp(data, setSignUpLoading, reset, goTo);
+    auth(data, BE_signUp, setSignUpLoading);
   };
 
   const handleSignIn = () => {
     const data = { email, password };
-    BE_signin(data, setSignInLoading, reset, goTo);
+    auth(data, BE_signUp, setSignInLoading);
+  };
+
+  const auth = (
+    data: authDataType,
+    func: any,
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>,
+  ) => {
+    (func(data), setLoading, reset, goTo, dispatch);
   };
 
   const reset = () => {
@@ -58,22 +69,6 @@ export const Login = () => {
               onChange={(e) => setConfirmPassword(e.target.value)}
             />
           )}
-
-          {/* {login ? (
-            <>
-              <Button onClick={handleSignUp} text="Login" />
-              <Button
-                onClick={() => setLogin(false)}
-                text="Register"
-                secondary
-              />
-            </>
-          ) : (
-            <>
-              <Button onClick={handleSignIn} text="Register" />
-              <Button onClick={() => setLogin(true)} text="Login" secondary />
-            </>
-          )} */}
 
           {login ? (
             <>
