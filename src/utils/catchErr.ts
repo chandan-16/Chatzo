@@ -8,6 +8,7 @@ export const CatchErr = (error:{code?: string}) => {
         else if(code === "auth/email-already-in-use") toastError("Email already exists")
         else if(code === "auth/wrong-password") toastError("Wrong Password")
         else if(code === "auth/requires-recent-login") toastError("Logout and login before updating your profile")
+        else if(code === "unavailable") toastError("Firebase client is offline")
         else toastError("An error occured")
-        console.log(error);
+        console.log(error, error.code);
 }

@@ -4,8 +4,8 @@ import type { userType } from "../Types";
 export const defaultUser: userType = {
     id: "",
     username: "",
-    isOnline: false,
     email: "",
+    isOnline: false,
     img: "",
     creationTime: "",
     lastSeen: "",
@@ -25,7 +25,7 @@ const userSlice = createSlice({
         setUser: (state, action) => {
             console.log(action);
             // set logedin user
-            // state.currentUser = action.payload
+            state.currentUser = action.payload
         },
         setUsers: (state, action) => {
             // set all users 

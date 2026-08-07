@@ -1,11 +1,12 @@
 import { useState } from "react";
-import Button from "./Button";
 import { Input } from "./Input";
-import { BE_signIn, BE_signUp } from "../backend/Queries";
+import Button from "./Button";
+// import { BE_signUp, BE_signIn } from "../backend/Queries";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
 import type { AppDispatch } from "../Redux/store";
 import type { authDataType } from "../Types";
+import { BE_signUp, BE_signIn } from "./../backend/Queries";
 
 export const Login = () => {
   const [login, setLogin] = useState<boolean>(true);
@@ -18,13 +19,20 @@ export const Login = () => {
   const dispatch = useDispatch<AppDispatch>();
 
   const handleSignUp = () => {
-    const data = { email, password, confirmPassword };
+    const data = {
+      email,
+      password,
+      confirmPassword,
+    };
     auth(data, BE_signUp, setSignUpLoading);
   };
 
   const handleSignIn = () => {
-    const data = { email, password };
-    auth(data, BE_signUp, setSignInLoading);
+    const data = {
+      email,
+      password,
+    };
+    auth(data, BE_signIn, setSignInLoading);
   };
 
   const auth = (
@@ -32,7 +40,7 @@ export const Login = () => {
     func: any,
     setLoading: React.Dispatch<React.SetStateAction<boolean>>,
   ) => {
-    (func(data), setLoading, reset, goTo, dispatch);
+    func(data, setLoading, reset, goTo, dispatch);
   };
 
   const reset = () => {

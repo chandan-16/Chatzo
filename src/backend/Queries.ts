@@ -5,9 +5,10 @@ import { CatchErr } from "../utils/catchErr";
 import type { authDataType, setLoadingType, userType } from "../Types";
 import type { NavigateFunction } from "react-router-dom";
 import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
-import { defaultUser } from "../Redux/userSlice";
+import { defaultUser, setUser } from "../Redux/userSlice";
 import type { AppDispatch } from "../Redux/store";
-import { useDispatch } from 'react-redux';
+import ConverTime from "../utils/ConvertTime";
+// import { useDispatch } from 'react-redux';
 
 // Collection names 
 const usersColl = "users";
@@ -28,11 +29,11 @@ export const BE_signUp = async (
         if (email && password) {
         if (password === confirmPassword) {
             createUserWithEmailAndPassword(auth, email, password)
-                .then(({ user }) => {
+                .then(async({ user }) => {
 
                     // TODO create user image 
 
-                    const userInfo = addUserToCollection(
+                    const userInfo = await addUserToCollection(
                         user.uid,
                         user.email || "",
                         user.email?.split("@")[0] || "",
@@ -50,9 +51,11 @@ export const BE_signUp = async (
                     gotTo("/dashboard")
                 })
 
-                .catch((err) => { CatchErr(err); setLoading(false) })
-        } else toastError("Password must match!")
-    } else toastError("Fields shoudn't be left empty! ");
+                .catch((err) => { CatchErr(err); 
+                setLoading(false)})
+
+        } else toastError("Password must match!", setLoading)
+    } else toastError("Fields shoudn't be left empty! ", setLoading);
 };
 
 export const BE_signIn = (
@@ -65,15 +68,15 @@ export const BE_signIn = (
 
     setLoading(true);
     signInWithEmailAndPassword(auth, email, password)
-        .then(({ user }) => {
+        .then(async ({ user }) => {
 
-            // get user info
-
-
+            // TODO update user isOnline to true
 
 
-            // TODO Set user info in store and also local storage
-            const userInfo =  getUserInfo(user.uid)
+
+
+            // TODO set user info in store and also local storage
+            const userInfo = await getUserInfo(user.uid)
             dispatch(setUser(userInfo))
 
 
@@ -88,7 +91,12 @@ export const BE_signIn = (
         })
 }
 
-const addUserToCollection = async (id: string, email: string, username: string, img: string) => {
+const addUserToCollection = async (
+    id: string,
+    email: string,
+    username: string,
+    img: string) => {
+        // create user with user id 
     await setDoc(doc(db, usersColl, id), {
         isOnLine: true,
         img,
@@ -117,8 +125,8 @@ const getUserInfo = async (id: string): Promise<userType> => {
             username,
             email,
             bio,
-            creationTime,
-            lastSeen
+            creationTime: creationTime ? ConverTime(creationTime.toDate()) : "No date yet: userinfo",
+            lastSeen: lastSeen ? ConverTime(creationTime.toDate()) : "No date yet: userinfo",
         }
     }else {
         toastError("getUserInfo: User not found");
