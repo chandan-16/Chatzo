@@ -1,5 +1,7 @@
 import Logo from "../assets/logo.png";
-import Button from "./Button";
+import AddListBoard from "./AddListBoard";
+import Icon from "../components/Icon";
+import { BsChatLeftFill } from "react-icons/bs";
 
 type Props = {};
 
@@ -13,7 +15,8 @@ export default function Header({}: Props) {
       />
 
       <div className="flex">
-        <Button text="Add New ListBoard" secondary />
+        <AddListBoard />
+        <Icon IconName={BsChatLeftFill} ping={true} />
       </div>
     </header>
   );
