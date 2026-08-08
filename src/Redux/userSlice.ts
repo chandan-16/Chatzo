@@ -23,9 +23,13 @@ const userSlice = createSlice({
     initialState,
     reducers: {
         setUser: (state, action) => {
-            console.log(action);
+            const user = action.payload;
+
+            // store user in local storage
+            localStorage.setItem("chatzo_user", JSON.stringify(user));
+
             // set logedin user
-            state.currentUser = action.payload
+            state.currentUser = user
         },
         setUsers: (state, action) => {
             // set all users 

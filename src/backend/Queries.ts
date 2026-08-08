@@ -4,10 +4,11 @@ import { toastError } from "../utils/toast";
 import { CatchErr } from "../utils/catchErr";
 import type { authDataType, setLoadingType, userType } from "../Types";
 import type { NavigateFunction } from "react-router-dom";
-import { doc, getDoc, serverTimestamp, setDoc } from "firebase/firestore";
+import { doc, getDoc, serverTimestamp, setDoc, updateDoc } from "firebase/firestore";
 import { defaultUser, setUser } from "../Redux/userSlice";
 import type { AppDispatch } from "../Redux/store";
 import ConverTime from "../utils/ConvertTime";
+import AvatarGenerator from "../utils/avatarGenerator";
 // import { useDispatch } from 'react-redux';
 
 // Collection names 
@@ -31,13 +32,14 @@ export const BE_signUp = async (
             createUserWithEmailAndPassword(auth, email, password)
                 .then(async({ user }) => {
 
-                    // TODO create user image 
+                    // generate user avatar with username
+                    const imgLink = AvatarGenerator(user.email?.split("@")[0])
 
                     const userInfo = await addUserToCollection(
                         user.uid,
                         user.email || "",
                         user.email?.split("@")[0] || "",
-                        "imageLink"
+                        imgLink
                     );
 
                     // TODO set user info in store and localStorage 
@@ -67,13 +69,13 @@ export const BE_signIn = (
     const { email, password } = data;
 
     setLoading(true);
+
     signInWithEmailAndPassword(auth, email, password)
         .then(async ({ user }) => {
 
             // TODO update user isOnline to true
 
-
-
+            await updateUserInfo({id: user.uid, isOnline: true})
 
             // TODO set user info in store and also local storage
             const userInfo = await getUserInfo(user.uid)
@@ -91,6 +93,8 @@ export const BE_signIn = (
         })
 }
 
+
+// add user to collection 
 const addUserToCollection = async (
     id: string,
     email: string,
@@ -111,6 +115,8 @@ const addUserToCollection = async (
     return getUserInfo(id);
 };
 
+
+// get user info
 const getUserInfo = async (id: string): Promise<userType> => {
     const userRef = doc(db, usersColl, id);
     const user = await getDoc(userRef);
@@ -134,3 +140,38 @@ const getUserInfo = async (id: string): Promise<userType> => {
     }
 }
 
+// update user info
+const updateUserInfo = async ({
+    id,
+    username, 
+    img, 
+    isOnline, 
+    isOffline}: 
+    {
+        id?: string
+        username?: string; 
+        img?: string; 
+        isOnline?: boolean; 
+        isOffline?: boolean}) => 
+    {
+        if(!id){
+            id = getStorageUser().id
+        }
+
+        if(id){
+           
+            await updateDoc(doc(db, usersColl, id), {
+                ...(username && {username}),
+                ...(isOnline && {isOnline}),
+                ...(isOffline && {isOffline : false}),
+                ...(img && {img}),
+                lastSeen: serverTimestamp(),
+            })
+            ;
+        }
+};
+
+const getStorageUser = () => {
+    const user = localStorage.getItem("chatzo_user");
+    if(user) return JSON.parse(user)
+}
